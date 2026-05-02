@@ -1,4 +1,33 @@
 @import "tailwindcss";
 @import "@heroui/styles"; 
 
+:root {
+	color-scheme: light;
+}
+
+html {
+	min-height: 100%;
+	background: transparent;
+}
+
+body {
+	min-height: 100vh;
+	color: #23384d;
+	background: #fff;
+}
+
+.marquee {
+	animation: marquee-scroll 18s linear infinite;
+}
+
+@keyframes marquee-scroll {
+	from {
+		transform: translateX(0);
+	}
+
+	to {
+		transform: translateX(-50%);
+	}
+}
+
 
