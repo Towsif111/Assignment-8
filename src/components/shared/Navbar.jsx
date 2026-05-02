@@ -3,8 +3,11 @@
 import Link from "next/link";
 import { useState } from "react";
 
+import { usePathname } from "next/navigation";
+
 export default function Navbar() {
 	const [loggedIn, setLoggedIn] = useState(false);
+	const pathname = usePathname();
 
 	return (
 		<header className="w-full border-b border-slate-200 bg-white px-4 sm:px-6 lg:px-8">
@@ -19,14 +22,14 @@ export default function Navbar() {
 						<nav className="flex items-center gap-4 sm:gap-6 lg:gap-10">
 							<Link
 								href="/"
-								className="rounded-full bg-slate-800 px-4 py-2 text-sm font-medium text-white shadow-sm"
+								className={`rounded-full px-4 py-2 text-sm font-medium transition ${pathname === "/" ? "bg-slate-800 text-white shadow-sm" : "text-slate-600 hover:text-slate-800"}`}
 							>
 								Home
 							</Link>
-							<Link href="/tiles" className="text-slate-600 transition hover:text-slate-800">
+							<Link href="/tiles" className={`rounded-full px-4 py-2 text-sm font-medium transition ${pathname === "/tiles" ? "bg-slate-800 text-white shadow-sm" : "text-slate-600 hover:text-slate-800"}`}>
 								All Tiles
 							</Link>
-							<Link href="/profile" className="text-slate-600 transition hover:text-slate-800">
+							<Link href="/profile" className={`rounded-full px-4 py-2 text-sm font-medium transition ${pathname === "/profile" ? "bg-slate-800 text-white shadow-sm" : "text-slate-600 hover:text-slate-800"}`}>
 								My Profile
 							</Link>
 							</nav>
