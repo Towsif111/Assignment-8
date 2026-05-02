@@ -44,8 +44,8 @@ const TilesPage = () => {
                   key={tile.id}
                   className="overflow-hidden rounded-xl border border-slate-200/80 bg-white shadow-sm transition hover:shadow-md"
                 >
-                  <div className="relative h-48 w-full bg-linear-to-br from-slate-100 to-slate-200 flex items-center justify-center">
-                    <span className="text-sm font-medium text-slate-500">{tile.material}</span>
+                  <div className="relative h-48 w-full bg-linear-to-br from-slate-100 to-slate-200 flex items-center justify-center overflow-hidden">
+                    <img src={tile.image} alt={tile.title} className="h-full w-full object-cover" />
                   </div>
                   <div className="p-5">
                     <h2 className="text-lg font-semibold text-slate-800">{tile.title}</h2>

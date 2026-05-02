@@ -54,7 +54,11 @@ export default function Home() {
                 className="rounded-xl border border-slate-200/80 bg-white p-5 shadow-sm transition hover:shadow-md"
               >
                 <div className="relative h-40 w-full overflow-hidden rounded-lg bg-linear-to-br from-slate-100 to-slate-200 flex items-center justify-center">
-                  <span className="text-sm font-medium text-slate-500">{tile.material}</span>
+                  <img
+                    src={tile.image}
+                    alt={tile.title}
+                    className="h-full w-full object-cover"
+                  />
                 </div>
                 <h3 className="mt-4 text-lg font-semibold text-slate-800">{tile.title}</h3>
                 <p className="mt-2 text-sm text-slate-600 line-clamp-2">{tile.description}</p>
