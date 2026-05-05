@@ -1,7 +1,6 @@
 "use client";
 
 import React from "react";
-import { } from "@gravity-ui/icons";
 import { Button, Description, FieldError, Form, Input, Label, TextField } from "@heroui/react";
 
 function RegisterForm() {
@@ -18,6 +17,22 @@ function RegisterForm() {
 
     return (
         <Form className="flex w-96 flex-col gap-4" render={(props) => <form {...props} data-custom="foo" />} onSubmit={onSubmit}>
+            
+
+            <TextField
+                isRequired
+                name="name"
+                type="text"
+                validate={(value) => {
+                    if (!value || value.trim().length < 2) return "Please enter your name";
+                    return null;
+                }}
+            >
+                <Label>Name</Label>
+                <Input placeholder="Your full name" />
+                <FieldError />
+            </TextField>
+
             <TextField
                 isRequired
                 name="email"
@@ -34,6 +49,8 @@ function RegisterForm() {
                 <Input placeholder="john@example.com" />
                 <FieldError />
             </TextField>
+
+            
 
             <TextField
                 isRequired
@@ -61,12 +78,8 @@ function RegisterForm() {
             </TextField>
 
             <div className="flex gap-2">
-                <Button type="submit">
-                    Submit
-                </Button>
-                <Button type="reset" variant="secondary">
-                    Reset
-                </Button>
+                <Button type="submit">Register</Button>
+                <Button type="reset" variant="secondary">Reset</Button>
             </div>
         </Form>
     );

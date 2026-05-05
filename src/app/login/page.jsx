@@ -1,24 +1,53 @@
 "use client";
 
-import React from "react";
-import {  } from "@gravity-ui/icons";
+import React, { useState } from "react";
+import { useRouter } from "next/navigation";
 import { Button, Description, FieldError, Form, Input, Label, TextField } from "@heroui/react";
 import Link from "next/link";
 
 function BasicForm() {
-    const onSubmit = (e) => {
+    const router = useRouter();
+    const [error, setError] = useState("");
+
+    const onSubmit = async (e) => {
         e.preventDefault();
+        setError("");
         const formData = new FormData(e.currentTarget);
         const data = {};
         formData.forEach((value, key) => {
             data[key] = value.toString();
         });
 
-        alert(`Form submitted with: ${JSON.stringify(data, null, 2)}`);
+        // Try server-side login first (if you have an API).
+        try {
+            const res = await fetch("/api/auth/login", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(data),
+            });
+
+            if (res.ok) {
+                // on success navigate to home
+                router.push("/");
+                return;
+            }
+        } catch (err) {
+            // ignore and fall back to client-side check
+        }
+
+        // Fallback client-side check (replace with real auth).
+        const { email = "", password = "" } = data;
+        if (email === "admin@example.com" && password === "Admin123") {
+            router.push("/");
+            return;
+        }
+
+        setError("Invalid email or password. Please try again.");
     };
 
     return (
         <Form className="flex w-96 flex-col gap-4" onSubmit={onSubmit}>
+            {error && <div className="text-sm text-red-600 bg-red-50 p-2 rounded">{error}</div>}
             <TextField
                 isRequired
                 name="email"
