@@ -38,12 +38,12 @@ export default function Navbar() {
 				
 					<div className="flex items-center justify-end gap-3">
 						{!loggedIn ? (
-							<button
-								onClick={() => setLoggedIn(true)}
+							<Link
+								href="/login"
 								className="rounded-full border border-slate-300 px-4 py-2 transition hover:bg-slate-50"
 							>
 								Login
-							</button>
+							</Link>
 						) : (
 							<>
 								<Link href="/profile" className="text-slate-700 transition hover:text-slate-900">
