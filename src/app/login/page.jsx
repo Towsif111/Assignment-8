@@ -1,8 +1,9 @@
 "use client";
 
 import React from "react";
-import { Check } from "@gravity-ui/icons";
+import {  } from "@gravity-ui/icons";
 import { Button, Description, FieldError, Form, Input, Label, TextField } from "@heroui/react";
+import Link from "next/link";
 
 function BasicForm() {
     const onSubmit = (e) => {
@@ -70,12 +71,12 @@ export default function LoginPage() {
             <div className="w-full max-w-md">
                 <h1 className="mb-6 text-2xl font-semibold text-slate-800">Sign in to TileScape</h1>
                 <BasicForm />
-                <div className="mt-4 text-left text-sm">
+                <p className="mt-4 text-center text-slate-600">
                     Don't have an account?{" "}
-                    <a href="/register" className="text-blue-500 hover:underline">
+                    <Link href="/register" className="text-blue-600 hover:text-blue-800 font-semibold">
                         Register
-                    </a>
-                </div>
+                    </Link>
+                </p>
             </div>
         </main>
     );
