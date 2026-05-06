@@ -53,11 +53,6 @@ const TilesPage = () => {
                     <div className="mt-4">
                       <span className="text-xl font-bold text-slate-900">${tile.price}</span>
                     </div>
-                    <div className="mt-4 space-y-2 text-xs text-slate-600">
-                      <p><strong>Dimensions:</strong> {tile.dimensions}</p>
-                      <p><strong>Material:</strong> {tile.material}</p>
-                      <p><strong>Category:</strong> {tile.category}</p>
-                    </div>
                     <Link
                       href={`/tiles/${tile.id}`}
                       className="mt-5 w-full inline-flex items-center justify-center rounded-lg bg-slate-800 px-4 py-2 text-sm font-semibold text-white transition hover:bg-slate-700"
