@@ -17,8 +17,6 @@ function BasicForm() {
         formData.forEach((value, key) => {
             data[key] = value.toString();
         });
-
-        // Try server-side login first (if you have an API).
         try {
             const res = await fetch("/api/auth/login", {
                 method: "POST",
@@ -27,15 +25,12 @@ function BasicForm() {
             });
 
             if (res.ok) {
-                // on success navigate to home
                 router.push("/");
                 return;
             }
         } catch (err) {
-            // ignore and fall back to client-side check
         }
 
-        // Fallback client-side check (replace with real auth).
         const { email = "", password = "" } = data;
         if (email === "admin@example.com" && password === "Admin123") {
             router.push("/");
