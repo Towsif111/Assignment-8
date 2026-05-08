@@ -1,36 +1,71 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# TilesGallery
+
+A modern tiles gallery built with Next.js and Better Auth. Browse curated tiles, view details, and manage your profile with email/password and Google sign-in.
+
+## Features
+
+- Tile catalog with featured items and detail pages
+- Email/password authentication and Google OAuth (Better Auth)
+- Profile view and update flow
+- Responsive UI built with HeroUI and Tailwind
+- Animated UI accents with animate.css
+
+## Tech Stack
+
+- Next.js (App Router)
+- React
+- Better Auth + MongoDB adapter
+- Tailwind CSS + HeroUI
 
 ## Getting Started
 
-First, run the development server:
+Install dependencies:
+
+```bash
+npm install
+```
+
+Run the development server:
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open http://localhost:3000 in your browser.
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+## Environment Variables
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Create a `.env.local` file in the project root:
 
-## Learn More
+```bash
+MONGO_URI=your_mongodb_connection_string
+GOOGLE_CLIENT_ID=your_google_client_id
+GOOGLE_CLIENT_SECRET=your_google_client_secret
+NEXT_PUBLIC_BETTER_AUTH_URL=http://localhost:3000
+```
 
-To learn more about Next.js, take a look at the following resources:
+## Scripts
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- `npm run dev` - start development server
+- `npm run build` - build for production
+- `npm run start` - start production server
+- `npm run lint` - run ESLint
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Project Structure
 
-## Deploy on Vercel
+```
+src/
+	app/               # App Router pages and layouts
+	components/        # Shared UI components
+	lib/               # Auth client and server configuration
+public/
+	data/tiles.json    # Tile catalog data
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Authentication Notes
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- Google OAuth must be configured in your Google Cloud project.
+- Ensure the callback URL matches your Better Auth setup.
+- Update `NEXT_PUBLIC_BETTER_AUTH_URL` for production.
+
+

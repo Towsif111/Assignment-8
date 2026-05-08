@@ -23,14 +23,9 @@ const TilesPage = () => {
   return (
     <main className="flex-1 px-4 pb-12 pt-4 sm:px-6 lg:px-8">
       <section className="w-full">
-        <div className="flex justify-end mb-6">
-            <Link
-              href="/"
-              className="inline-flex items-center justify-center rounded-full border border-slate-200 bg-white px-5 py-3 font-medium text-slate-700 transition hover:border-slate-300 hover:bg-slate-50"
-            >
-              Back Home
-            </Link>
-          </div>
+        <div className="mb-6 px-4 sm:px-5">
+          <h1 className="text-4xl font-semibold text-slate-900 sm:text-5xl">All Tiles</h1>
+        </div>
 
         <div className="px-4 sm:px-5">
           {loading ? (

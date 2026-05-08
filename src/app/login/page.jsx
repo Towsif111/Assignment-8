@@ -106,9 +106,9 @@ export default function LoginPage() {
             <div className="w-full max-w-md">
                 <h1 className="mb-6 text-2xl font-semibold text-slate-800">Sign in to TileScape</h1>
                 <SignInPage />
-                <Button type="button" variant="bordered" className="mt-4 w-full" onPress={handleGoogleSignIn}>
+                <Button type="button" variant="bordered" className="mt-4 w-full animate__animated animate__flash" onPress={handleGoogleSignIn}>
                     <i className="fa-brands fa-google text-2xl" aria-hidden="true" />
-                    <span className="ml-2">Continue with Google</span>
+                    <span className="ml-2">Login with Google</span>
                 </Button>
                 <p className="mt-4 text-center text-slate-600">
                     Don&apos;t have an account?{" "}

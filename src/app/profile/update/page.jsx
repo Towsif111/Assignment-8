@@ -48,14 +48,9 @@ export default function UpdateProfilePage() {
 	return (
 		<main className="flex flex-1 items-center justify-center px-4 pt-16 pb-12">
 			<div className="w-full max-w-md rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
-				<div className="flex items-start justify-between gap-4">
-					<div>
-						<h1 className="text-2xl font-semibold text-slate-900">Update profile</h1>
-						<p className="mt-2 text-sm text-slate-600">Update your name or avatar image.</p>
-					</div>
-					<Link href="/profile" className="text-sm font-medium text-slate-600 hover:text-slate-800">
-						Back
-					</Link>
+				<div>
+					<h1 className="text-2xl font-semibold text-slate-900">Update profile</h1>
+					<p className="mt-2 text-sm text-slate-600">Update your name or avatar image.</p>
 				</div>
 
 				<form onSubmit={onSubmit} className="mt-6 space-y-4">
