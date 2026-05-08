@@ -82,11 +82,34 @@ const SignInPage = () => {
 };
 
 export default function LoginPage() {
+    const handleGoogleSignIn = async () => {
+        const { data, error } = await authClient.signIn.social({
+            provider: "google",
+            callbackURL: "/"
+        });
+
+        if (error) {
+            alert(error.message || "Google sign-in failed");
+            return;
+        }
+
+        if (data?.url) {
+            window.location.assign(data.url);
+            return;
+        }
+
+        window.location.assign("/");
+    };
+
     return (
         <main className="flex-1 flex items-center justify-center py-12 px-4">
             <div className="w-full max-w-md">
                 <h1 className="mb-6 text-2xl font-semibold text-slate-800">Sign in to TileScape</h1>
                 <SignInPage />
+                <Button type="button" variant="bordered" className="mt-4 w-full" onPress={handleGoogleSignIn}>
+                    <i className="fa-brands fa-google text-2xl" aria-hidden="true" />
+                    <span className="ml-2">Continue with Google</span>
+                </Button>
                 <p className="mt-4 text-center text-slate-600">
                     Don&apos;t have an account?{" "}
                     <Link href="/register" className="text-blue-600 hover:text-blue-800 font-semibold">
