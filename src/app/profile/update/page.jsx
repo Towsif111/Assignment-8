@@ -17,9 +17,16 @@ export default function UpdateProfilePage() {
 		setIsSaving(true);
 		setError("");
 
+		const rawImage = image.trim();
+		const normalizedImage = rawImage
+			? /^https?:\/\//i.test(rawImage) || rawImage.startsWith("data:image/")
+				? rawImage
+				: `https://${rawImage}`
+			: "";
+
 		const { error: updateError } = await authClient.updateUser({
 			name: name.trim() || undefined,
-			image: image.trim() || undefined,
+			image: normalizedImage || undefined,
 		});
 
 		if (updateError) {

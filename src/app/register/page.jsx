@@ -1,37 +1,78 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import { Button, Description, FieldError, Form, Input, Label, TextField } from "@heroui/react";
 import { authClient } from "@/lib/auth-client";
 
+const Toast = ({ message, tone }) => {
+    if (!message) return null;
+
+    const toneStyles =
+        tone === "success"
+            ? "border-emerald-200 bg-emerald-50 text-emerald-800"
+            : "border-rose-200 bg-rose-50 text-rose-800";
+
+    return (
+        <div
+            role="alert"
+            className={`mb-4 rounded-xl border px-4 py-3 text-sm shadow-sm ${toneStyles}`}
+        >
+            {message}
+        </div>
+    );
+};
+
 const SignUpPage = () => {
+    const [toast, setToast] = useState({ tone: "", message: "" });
+    const [showPassword, setShowPassword] = useState(false);
     const onSubmit = async (e) => {
         e.preventDefault();
         const formData = new FormData(e.currentTarget);
         const userData = Object.fromEntries(formData.entries());
         console.log("Form submitted with:", userData);
 
+        const normalizedPhoto = userData.photo ? String(userData.photo).trim() : "";
+
         const { data, error } = await authClient.signUp.email({
             name: userData.name,
             email: userData.email,
             password: userData.password,
-            image: userData.photo,
+            image: normalizedPhoto || undefined,
             callbackURL: "/",
         });
 
         console.log("Sign up response:", { data, error });
         if (error) {
-            alert("Error signing up: " + error.message);
+            setToast({ tone: "error", message: error.message || "Registration failed" });
+            return;
         }
-        if (data) {
-            alert("Sign up successful! Please check your email to verify your account.");
+
+        const { data: signInData, error: signInError } = await authClient.signIn.email({
+            email: userData.email,
+            password: userData.password,
+            rememberMe: true,
+            callbackURL: "/",
+        });
+
+        if (signInError) {
+            setToast({
+                tone: "success",
+                message: "Registration complete. Please log in to continue.",
+            });
+            setTimeout(() => window.location.assign("/login"), 800);
+            return;
         }
+
+        setToast({ tone: "success", message: "Registration successful. Redirecting..." });
+        const destination = signInData?.url || data?.url || "/";
+        setTimeout(() => window.location.assign(destination), 800);
     };
 
     return (
         <div className="flex items-center justify-center py-8 px-2">
             <div className="w-full max-w-md">
                 <h1 className="mb-1 text-center text-2xl font-semibold text-slate-800">Create an account</h1>
+                <Toast message={toast.message} tone={toast.tone} />
                 <Form className="flex w-full flex-col gap-1" render={(props) => <form {...props} />} onSubmit={onSubmit}>
                     <TextField
                         isRequired
@@ -74,24 +115,31 @@ const SignUpPage = () => {
                         isRequired
                         minLength={8}
                         name="password"
-                        type="password"
+                        type={showPassword ? "text" : "password"}
                         validate={(value) => {
                             if (value.length < 8) {
                                 return "Password must be at least 8 characters";
-                            }
-                            if (!/[A-Z]/.test(value)) {
-                                return "Password must contain at least one uppercase letter";
-                            }
-                            if (!/[0-9]/.test(value)) {
-                                return "Password must contain at least one number";
                             }
 
                             return null;
                         }}
                     >
                         <Label>Password</Label>
-                        <Input placeholder="Enter your password" />
-                        <Description>Must be at least 8 characters with 1 uppercase and 1 number</Description>
+                        <div className="relative w-full">
+                            <Input className="w-full pr-12" placeholder="Enter your password" />
+                            <button
+                                type="button"
+                                onClick={() => setShowPassword((current) => !current)}
+                                className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 transition hover:text-slate-700"
+                                aria-label={showPassword ? "Hide password" : "Show password"}
+                            >
+                                <i
+                                    className={`fa-solid ${showPassword ? "fa-eye-slash" : "fa-eye"}`}
+                                    aria-hidden="true"
+                                />
+                            </button>
+                        </div>
+                        <Description>Must be at least 8 characters</Description>
                         <FieldError />
                     </TextField>
 

@@ -1,12 +1,31 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import { Button, Description, FieldError, Form, Input, Label, TextField } from "@heroui/react";
 import Link from "next/link";
 import { authClient } from "@/lib/auth-client";
 
-const SignInPage = () => {
-    const onSubmit = async(e) => {
+const Toast = ({ message, tone }) => {
+    if (!message) return null;
+
+    const toneStyles =
+        tone === "success"
+            ? "border-emerald-200 bg-emerald-50 text-emerald-800"
+            : "border-rose-200 bg-rose-50 text-rose-800";
+
+    return (
+        <div
+            role="alert"
+            className={`mb-4 rounded-xl border px-4 py-3 text-sm shadow-sm ${toneStyles}`}
+        >
+            {message}
+        </div>
+    );
+};
+
+const SignInPage = ({ onToast }) => {
+    const [showPassword, setShowPassword] = useState(false);
+    const onSubmit = async (e) => {
         e.preventDefault();
         const formData = new FormData(e.currentTarget);
         const userData = Object.fromEntries(formData.entries());
@@ -21,16 +40,13 @@ const SignInPage = () => {
         console.log("Sign in response:", { data, error });
 
         if (error) {
-            alert(error.message || "Login failed");
+            onToast({ tone: "error", message: error.message || "Login failed" });
             return;
         }
 
-        if (data?.url) {
-            window.location.assign(data.url);
-            return;
-        }
-
-        window.location.assign("/");
+        onToast({ tone: "success", message: "Login successful. Redirecting..." });
+        const destination = data?.url || "/";
+        setTimeout(() => window.location.assign(destination), 800);
     };
 
     return (
@@ -55,17 +71,28 @@ const SignInPage = () => {
                 isRequired
                 minLength={8}
                 name="password"
-                type="password"
+                type={showPassword ? "text" : "password"}
                 validate={(value) => {
                     if (value.length < 8) return "Password must be at least 8 characters";
-                    if (!/[A-Z]/.test(value)) return "Password must contain at least one uppercase letter";
-                    if (!/[0-9]/.test(value)) return "Password must contain at least one number";
                     return null;
                 }}
             >
                 <Label>Password</Label>
-                <Input placeholder="Enter your password" />
-                <Description>Must be at least 8 characters with 1 uppercase and 1 number</Description>
+                <div className="relative w-full">
+                    <Input className="w-full pr-12" placeholder="Enter your password" />
+                    <button
+                        type="button"
+                        onClick={() => setShowPassword((current) => !current)}
+                        className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 transition hover:text-slate-700"
+                        aria-label={showPassword ? "Hide password" : "Show password"}
+                    >
+                        <i
+                            className={`fa-solid ${showPassword ? "fa-eye-slash" : "fa-eye"}`}
+                            aria-hidden="true"
+                        />
+                    </button>
+                </div>
+                <Description>Must be at least 8 characters</Description>
                 <FieldError />
             </TextField>
 
@@ -82,6 +109,7 @@ const SignInPage = () => {
 };
 
 export default function LoginPage() {
+    const [toast, setToast] = useState({ tone: "", message: "" });
     const handleGoogleSignIn = async () => {
         const { data, error } = await authClient.signIn.social({
             provider: "google",
@@ -89,23 +117,21 @@ export default function LoginPage() {
         });
 
         if (error) {
-            alert(error.message || "Google sign-in failed");
+            setToast({ tone: "error", message: error.message || "Google sign-in failed" });
             return;
         }
 
-        if (data?.url) {
-            window.location.assign(data.url);
-            return;
-        }
-
-        window.location.assign("/");
+        setToast({ tone: "success", message: "Login successful. Redirecting..." });
+        const destination = data?.url || "/";
+        setTimeout(() => window.location.assign(destination), 800);
     };
 
     return (
         <main className="flex-1 flex items-center justify-center py-12 px-4">
             <div className="w-full max-w-md">
                 <h1 className="mb-6 text-2xl font-semibold text-slate-800">Sign in to TileScape</h1>
-                <SignInPage />
+                <Toast message={toast.message} tone={toast.tone} />
+                <SignInPage onToast={setToast} />
                 <Button type="button" variant="bordered" className="mt-4 w-full animate__animated animate__flash" onPress={handleGoogleSignIn}>
                     <i className="fa-brands fa-google text-2xl" aria-hidden="true" />
                     <span className="ml-2">Login with Google</span>

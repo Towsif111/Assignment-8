@@ -4,15 +4,21 @@ import Image from "next/image";
 import Link from "next/link";
 import { useSession } from "@/lib/auth-client";
 
+const normalizeImageUrl = (value) => {
+	if (typeof value !== "string") return null;
+	const trimmed = value.replace(/\s+/g, "");
+	if (!trimmed) return null;
+	if (trimmed.startsWith("data:image/")) return trimmed;
+	return /^https?:\/\//i.test(trimmed) ? trimmed : `https://${trimmed}`;
+};
+
 export default function ProfilePage() {
 	const { data: session } = useSession();
 
 	const user = session?.user;
 	const userImage = user?.image || user?.photo || user?.avatar || user?.picture;
-	const normalizedImage = typeof userImage === "string" ? userImage.replace(/\s+/g, "") : null;
-	const isDataImage = typeof normalizedImage === "string" && normalizedImage.startsWith("data:image/");
-	const isHttpImage = typeof normalizedImage === "string" && /^https?:\/\//i.test(normalizedImage);
-	const resolvedImage = isDataImage || isHttpImage ? normalizedImage : null;
+	const resolvedImage = normalizeImageUrl(userImage);
+	const isDataImage = typeof resolvedImage === "string" && resolvedImage.startsWith("data:image/");
 
 	if (!user) {
 		return (
