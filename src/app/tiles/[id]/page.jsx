@@ -13,6 +13,10 @@ export default function TileDetailsPage() {
 	const { data: session } = useSession();
 	const user = session?.user;
 
+	const creator = tile?.creator || "TileScape Studio";
+	const styleDescription = tile?.styleDescription || tile?.description || "";
+	const tags = (tile?.tags || [tile?.category, tile?.material]).filter(Boolean);
+
 	useEffect(() => {
 		if (!tileId) return;
 		setLoading(true);
@@ -69,15 +73,31 @@ export default function TileDetailsPage() {
 						</div>
 						<div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
 							<h1 className="text-2xl font-semibold text-slate-900">{tile.title}</h1>
-							<p className="mt-3 text-slate-600">{tile.description}</p>
+							<p className="mt-3 text-slate-600">{styleDescription}</p>
 							<div className="mt-5 text-3xl font-bold text-slate-900">${tile.price}</div>
 
 							<div className="mt-6 space-y-3 text-sm text-slate-700">
-								<p><span className="font-semibold text-slate-900">Category:</span> {tile.category}</p>
-								<p><span className="font-semibold text-slate-900">Material:</span> {tile.material}</p>
+								<p><span className="font-semibold text-slate-900">Creator:</span> {creator}</p>
+								<p><span className="font-semibold text-slate-900">Style:</span> {styleDescription}</p>
 								<p><span className="font-semibold text-slate-900">Dimensions:</span> {tile.dimensions}</p>
 								<p><span className="font-semibold text-slate-900">Availability:</span> {tile.inStock ? "In stock" : "Out of stock"}</p>
 							</div>
+
+							{tags.length ? (
+								<div className="mt-6">
+									<p className="text-sm font-semibold text-slate-900">Tags</p>
+									<div className="mt-3 flex flex-wrap gap-2">
+										{tags.map((tag) => (
+											<span
+												key={tag}
+												className="rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-xs font-medium text-slate-700"
+											>
+												{tag}
+											</span>
+										))}
+									</div>
+								</div>
+							) : null}
 						</div>
 					</div>
 				) : (

@@ -1,11 +1,23 @@
 "use client";
 
 import Link from "next/link";
-import { useState, useEffect } from "react";
+import { Input } from "@heroui/react";
+import { useMemo, useState, useEffect } from "react";
 
 const TilesPage = () => {
   const [tiles, setTiles] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [query, setQuery] = useState("");
+
+  const filteredTiles = useMemo(() => {
+    const normalizedQuery = query.trim().toLowerCase();
+    if (!normalizedQuery) return tiles;
+    return tiles.filter((tile) => {
+      const title = tile.title?.toLowerCase() || "";
+      const description = tile.description?.toLowerCase() || "";
+      return title.includes(normalizedQuery) || description.includes(normalizedQuery);
+    });
+  }, [query, tiles]);
 
   useEffect(() => {
     fetch("/data/tiles.json")
@@ -28,36 +40,55 @@ const TilesPage = () => {
         </div>
 
         <div className="px-4 sm:px-5">
+          <div className="mt-6 max-w-2xl">
+            <Input
+              aria-label="Search tiles"
+              placeholder="Search tiles by title"
+              value={query}
+              onValueChange={setQuery}
+              className="rounded-2xl"
+              size="lg"
+            />
+          </div>
+
           {loading ? (
             <div className="mt-10 text-center">
               <p className="text-slate-600">Loading tiles...</p>
             </div>
           ) : (
-            <div className="mt-10 grid gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-              {tiles.map((tile) => (
-                <article
-                  key={tile.id}
-                  className="overflow-hidden rounded-xl border border-slate-200/80 bg-white shadow-sm transition hover:shadow-md"
-                >
-                  <div className="relative h-48 w-full bg-linear-to-br from-slate-100 to-slate-200 flex items-center justify-center overflow-hidden">
-                    <img src={tile.image} alt={tile.title} className="h-full w-full object-cover" />
-                  </div>
-                  <div className="p-5">
-                    <h2 className="text-lg font-semibold text-slate-800">{tile.title}</h2>
-                    <p className="mt-2 text-sm text-slate-600 line-clamp-2">{tile.description}</p>
-                    <div className="mt-4">
-                      <span className="text-xl font-bold text-slate-900">${tile.price}</span>
-                    </div>
-                    <Link
-                      href={`/tiles/${tile.id}`}
-                      className="mt-5 w-full inline-flex items-center justify-center rounded-lg bg-slate-800 px-4 py-2 text-sm font-semibold text-white transition hover:bg-slate-700"
+            <>
+              {filteredTiles.length === 0 ? (
+                <div className="mt-10 rounded-2xl border border-slate-200 bg-white p-6 text-center text-slate-600">
+                  No tiles match your search.
+                </div>
+              ) : (
+                <div className="mt-10 grid gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+                  {filteredTiles.map((tile) => (
+                    <article
+                      key={tile.id}
+                      className="overflow-hidden rounded-xl border border-slate-200/80 bg-white shadow-sm transition hover:shadow-md"
                     >
-                      View Details
-                    </Link>
-                  </div>
-                </article>
-              ))}
-            </div>
+                      <div className="relative h-48 w-full bg-linear-to-br from-slate-100 to-slate-200 flex items-center justify-center overflow-hidden">
+                        <img src={tile.image} alt={tile.title} className="h-full w-full object-cover" />
+                      </div>
+                      <div className="p-5">
+                        <h2 className="text-lg font-semibold text-slate-800">{tile.title}</h2>
+                        <p className="mt-2 text-sm text-slate-600 line-clamp-2">{tile.description}</p>
+                        <div className="mt-4">
+                          <span className="text-xl font-bold text-slate-900">${tile.price}</span>
+                        </div>
+                        <Link
+                          href={`/tiles/${tile.id}`}
+                          className="mt-5 w-full inline-flex items-center justify-center rounded-lg bg-slate-800 px-4 py-2 text-sm font-semibold text-white transition hover:bg-slate-700"
+                        >
+                          View Details
+                        </Link>
+                      </div>
+                    </article>
+                  ))}
+                </div>
+              )}
+            </>
           )}
         </div>
       </section>
